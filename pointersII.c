@@ -1,5 +1,5 @@
-/* Typedef `FuncType` as a function pointer
- * the `void *` pointer implements a callback	 
+/* Typedef `FuncType` as a pointer to a function with the signature `(int, void *)`
+ * the `void *` pointer implements a callback
  *
  * This is a fucking mess...
  * */
@@ -12,6 +12,7 @@ int DoFoo(int aVar, FuncType aFunc, void *dataPtr) {
 
 	int rv = 0;
 
+	/* This is really calling GetColorSpec(41, {15, "Who the heck is Willis?"}) */
 	if (aVar < LARGEST) {
 		rv = (*aFunc)(aVar, dataPtr);		/* This invokes the function `aFunc` through function pointer (deprecated) */
 	} else {
@@ -26,14 +27,14 @@ typedef struct {
 	char *phrase;
 } DataINeed;
 
-int RetFive(int num, void *bar) {
+int GetColorSpec(int num, void *bar) {
 	DataINeed *myData = bar;			/* Cast `void *` to `DataINeed *` */
-	return 5;
+	return myData->colorSpec;
 }
 
 int main(){
 	static DataINeed sillyStuff = { 15, "Who the heck is Willis?" };
-	int printThis = DoFoo(41, &RetFive, &sillyStuff);
-	printf("RetFive returned %d\n", printThis);
+	int printThis = DoFoo(41, &GetColorSpec, &sillyStuff);
+	printf("GetColorSpec returned %d\n", printThis);
 }
 
